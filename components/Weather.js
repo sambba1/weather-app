@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { View, Text, Image,StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import { useEffect } from 'react';
-
+import { APIKEY } from '../api.js';
 
 export default function Weather() {
 
@@ -33,7 +33,7 @@ export default function Weather() {
             
         
         try {
-          const response = await fetch('https://api.openweathermap.org/data/2.5/weather?'+ 'lat=' + location.coords.latitude + '&lon=' + location.coords.longitude + '&units=metric&appid=' + process.env.APIKEY);
+          const response = await fetch('https://api.openweathermap.org/data/2.5/weather?'+ 'lat=' + location.coords.latitude + '&lon=' + location.coords.longitude + '&units=metric&appid=' + APIKEY);
           const data = await response.json();
           setTemp(data.main.temp);
           setWeather(data.weather[0].main);
@@ -44,7 +44,7 @@ export default function Weather() {
         } finally {
           setReady(true);
         }
-      };
+    };
 
     if(isReady){
         return (
