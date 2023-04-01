@@ -4,14 +4,14 @@ import * as Location from 'expo-location';
 import { useEffect } from 'react';
 import { APIKEY } from '../api.js';
 
-export default function Weather() {
+export default function Weather(props) {
 
     const [isReady, setReady] = useState(true);
     const [weatherData, setWeatherData] = useState('');
     const [forecastData, setForecastData] = useState('');
 
     
-    const getWeatherData = async () => {
+    const getGpsWeatherData = async () => {
         setReady(false);
 
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -34,14 +34,29 @@ export default function Weather() {
         setReady(true);
         
     };
+    const getWeatherData = async () => {
+        setReady(false);
+        const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q='+ props.city + '&units=metric&appid=' + APIKEY + "&lang=fi");
+        const data = await response.json();
+        setWeatherData(data);
+        const response2 = await fetch('https://api.openweathermap.org/data/2.5/forecast?q='+  props.city + '&units=metric&appid=' + APIKEY);
+        const data2 = await response2.json();
+        
+        let weatherDataWithKeys = data2.list.map((data, index) => {
+            let key = index;
+            return { key: key, ...data };
+        });
+        setForecastData(weatherDataWithKeys);
+        setReady(true);
+        
+    };
    
     const forecast = () =>{
         forecastData.forEach((data, index) => {
             const key = `{index}`;
         });
-        console.log(forecastData[0])
         return (
-            <View style={{backgroundColor: 'rgba(120, 120, 120, 0.3)',
+            <View style={{backgroundColor: 'rgba(60, 60, 60, 0.3)',
             borderRadius: 10,
             overflow: 'hidden',
             marginVertical: 20,
@@ -86,7 +101,11 @@ export default function Weather() {
 
     if(isReady){
         if (weatherData.length == 0){
-            getWeatherData();
+            if (props.city === 'gps'){
+                getGpsWeatherData();
+            }else{
+                getWeatherData();
+            }
             return;
         }
         return (
@@ -111,7 +130,9 @@ export default function Weather() {
     }else{
         return(
             <View>
+
                 <Text>Loading...</Text>
+
             </View>
         )
     }
