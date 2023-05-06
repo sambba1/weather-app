@@ -1,19 +1,19 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Dimensions, ScrollView, TextInput, TouchableOpacity} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { APIKEY } from '../api.js';
 export default function ListLocations(props){
 
     const [inputText, setInputText] = useState('');
     const handleInputTextChange = (text) => {
         setInputText(text);
-      };
-    
-      const handleInputTextSubmit = () => {
+    };
+
+    const handleInputTextSubmit = () => {
         addLocation(inputText);
         setInputText('');
-      };
+    };
     const screenWidth = Dimensions.get('window').width;
 
     const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ export default function ListLocations(props){
         },
         textInput: {
             height: 40,
-            width: screenWidth,
+            width: screenWidth-70,
             fontSize: 20,
             borderColor: 'black',
             backgroundColor: 'rgba(20, 20, 20, 0.3)',
@@ -34,12 +34,40 @@ export default function ListLocations(props){
             paddingHorizontal: 10,
         },
     });
-    const addLocation = (newLocation) => {
-        props.setLocations([...props.locations, {id: props.locations.length + 1, city: newLocation}]);
+    useEffect(() => {
+        props.saveLocations();
+    });
+    const checkValidCity = async (city) => {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKEY}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.cod === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    const addLocation = async (newLocation) => {
+        const isValidCity = await checkValidCity(newLocation);
+        if (isValidCity) {
+            props.setLocations([...props.locations, {id: props.locations.length + 1, city: newLocation}]);
+        } else {
+            alert("kaupunkia ei löytynyt");
+        }
     };
     const deleteLocation = (id) => {
         props.setLocations(props.locations.filter((item) => item.id !== id));
     };
+
+    const deleteButton = (item) => {
+        if(item.city !== "gps"){
+            return (
+                <TouchableOpacity onPress={() => deleteLocation(item.id)}>
+                    <Icon name="trash-o" size={30} color="red" />
+                </TouchableOpacity> 
+            );
+        }
+    }
 
     const renderItem = ({ item }) => (
         <View style={{backgroundColor: 'rgba(60, 60, 60, 0.3)',
@@ -50,27 +78,48 @@ export default function ListLocations(props){
         height:100,
         width: screenWidth-20,
         flexDirection: 'row',
-        justifyContent: 'center'}}>
-            <Text style={{fontSize: 40, flex: 2}}>{item.city}</Text>
-            <TouchableOpacity onPress={() => deleteLocation(item.id)}>
-                <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>  
+        justifyContent: 'center',
+        alignItems: 'center'
+        }}>
+        
+            <View style={{flex: 10}}>
+                <Text style={{fontSize: 40, flex: 2}}>{item.city}</Text>
+            </View>
+            <View style={{flex: 1}}>
+                {deleteButton(item)}
+            </View>
+            
+            
             
         </View>
     );
+
+
 
     return (
         
         <View style={styles.container}>
         <View style={{flex: 1, paddingTop: 80}}>
             <Text style={{fontSize: 50}}>Sää</Text>
-            <TextInput
-            style={styles.textInput}
-            placeholder="Etsi kaupunkia"
-            value={inputText}
-            onChangeText={handleInputTextChange}
-            onSubmitEditing={handleInputTextSubmit}
-            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TextInput
+                style={styles.textInput}
+                placeholder="Etsi kaupunkia"
+                value={inputText}
+                onChangeText={handleInputTextChange}
+                onSubmitEditing={handleInputTextSubmit}
+                />
+                <TouchableOpacity onPress={handleInputTextSubmit}
+                 style={{ 
+                    borderColor: 'black',
+                    backgroundColor: 'rgba(20, 20, 20, 0.3)',
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    
+                  }}>
+                    <Text style={{padding: 10}}>Find</Text>
+                </TouchableOpacity>
+            </View>
         </View>
 
         <View style={{ flex: 7 }}>

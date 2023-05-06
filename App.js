@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 
 import { StyleSheet, Text, View, FlatList, Dimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,6 +8,10 @@ import ListWeather from './components/ListWeather';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 export default function App() {
 
@@ -15,10 +19,30 @@ export default function App() {
 
 
 
-  const [locations, setLocations] = useState([
-    {id: 1, city: 'gps'},
-  ]);
-  
+    const [locations, setLocations] = useState([
+      {id: 1, city: 'gps'},
+    ]);
+    const saveLocations = async () => {
+        try {
+            await AsyncStorage.setItem('locations', JSON.stringify(locations));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+  useEffect(() => {
+      const loadLocations = async () => {
+      try {
+          const savedLocations = await AsyncStorage.getItem('locations');
+          if (savedLocations !== null) {
+              setLocations(JSON.parse(savedLocations));
+          }
+      } catch (error) {
+          console.error(error);
+      }
+      };
+      loadLocations();
+  }, []);
 
   const Tab = createBottomTabNavigator();
   const screenOptions = ({ route }) => ({
@@ -46,6 +70,7 @@ export default function App() {
 
 
   return (
+    
     <NavigationContainer>
       <Tab.Navigator screenOptions={screenOptions} >
         <Tab.Screen
@@ -64,7 +89,7 @@ export default function App() {
             tabBarItemStyle: { backgroundColor: 'transparent' },
           }}
         >
-          {() => <ListLocations locations={locations} setLocations={setLocations} />}
+          {() => <ListLocations locations={locations} setLocations={setLocations} saveLocations={saveLocations} />}
         </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
