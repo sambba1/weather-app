@@ -51,7 +51,7 @@ export default function App() {
       if (route.name === 'Weather') {
         iconName = 'md-partly-sunny';
       } else if (route.name === 'Locations') {
-        iconName = 'md-pin';
+        iconName = 'md-list';
       }
       return <Ionicons name={iconName} size={size} color={color} />;
     },

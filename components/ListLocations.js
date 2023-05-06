@@ -19,7 +19,7 @@ export default function ListLocations(props){
     const styles = StyleSheet.create({
         container: {
           flex: 1,
-          backgroundColor: '#28587a',
+          backgroundColor: 'rgba(135, 206, 255,255)',
           alignItems: 'center',
           justifyContent: 'center',
         },
@@ -68,6 +68,17 @@ export default function ListLocations(props){
             );
         }
     }
+    const cityText = (city) => {
+        if(city == "gps"){
+            return (
+                <Text style={{fontSize: 40, flex: 2}}>Oma sijainti</Text>
+            )
+        }else{
+            return (
+                <Text style={{fontSize: 40, flex: 2}}>{city}</Text>
+            )
+        }
+    }
 
     const renderItem = ({ item }) => (
         <View style={{backgroundColor: 'rgba(60, 60, 60, 0.3)',
@@ -83,7 +94,7 @@ export default function ListLocations(props){
         }}>
         
             <View style={{flex: 10}}>
-                <Text style={{fontSize: 40, flex: 2}}>{item.city}</Text>
+                {cityText(item.city)}
             </View>
             <View style={{flex: 1}}>
                 {deleteButton(item)}

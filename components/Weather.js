@@ -114,6 +114,7 @@ export default function Weather(props) {
                     <Text style={{fontSize: 50}}>{ weatherData.name }</Text>
                     <Text style={{fontSize: 50}}>{ Math.round(weatherData.main.temp )+"°" }</Text>
                     <Text style={{fontSize: 20}}>{ weatherData.weather[0].description }</Text>
+                    <Text>Y: { Math.round(weatherData.main.temp_max)+"°"}    A: { Math.round(weatherData.main.temp_min)+"°"}</Text>
                     {DrawIcon(weatherData.weather[0].icon, 100)}
                 </View>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent:'center'}}>

@@ -9,7 +9,7 @@ export default function ListLocations(props){
     const screenWidth = Dimensions.get('window').width;
 
     const renderItem = ({ item }) => (
-      <View style={{ width: screenWidth, height: '100%', backgroundColor: '#28587a',}}>
+      <View style={{ width: screenWidth, height: '100%', backgroundColor: 'rgba(135, 206, 250,255)',}}>
         <Weather city={item.city}/>
       </View>
     );
