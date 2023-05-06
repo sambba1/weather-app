@@ -111,7 +111,7 @@ export default function ListLocations(props){
         
         <View style={styles.container}>
         <View style={{flex: 1, paddingTop: 80}}>
-            <Text style={{fontSize: 50}}>Sää</Text>
+            <Text style={{fontSize: 50}}>Sijainnit</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TextInput
                 style={styles.textInput}
@@ -128,7 +128,7 @@ export default function ListLocations(props){
                     borderRadius: 10,
                     
                   }}>
-                    <Text style={{padding: 10}}>Find</Text>
+                    <Text style={{padding: 10}}>Etsi</Text>
                 </TouchableOpacity>
             </View>
         </View>

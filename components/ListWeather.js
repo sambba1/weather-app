@@ -38,7 +38,7 @@ export default function ListLocations(props){
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#28587a',
+      backgroundColor: 'rgba(135, 206, 250,255)',
       alignItems: 'center',
       justifyContent: 'center',
     },

@@ -130,11 +130,23 @@ export default function Weather(props) {
         );
     }else{
         return(
-            <View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{flex: 2, alignItems: 'center', justifyContent: 'center'}}>
+                <Text style={{fontSize: 50}}>{"-" }</Text>
+                <Text style={{fontSize: 50}}>{ "-"+"°" }</Text>
+                <Text style={{fontSize: 20}}>{ "-" }</Text>
+                <Text>Y: { "-"+"°"}    A: { "-"+"°"}</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent:'center'}}>
+               
+            </View>
+            <View style={{
+                flex: 2,
 
-                <Text>Loading...</Text>
+                }}>
 
             </View>
+        </View>
         )
     }
 
