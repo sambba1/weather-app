@@ -20,11 +20,15 @@ export default function App() {
 
 
     const [locations, setLocations] = useState([
-        { id: 1, city: 'gps' },
+        { id: 1, city: 'gps', weather: {} },
     ]);
     const saveLocations = async () => {
         try {
-            await AsyncStorage.setItem('locations', JSON.stringify(locations));
+            const updatedLocations = locations.map(location => {
+                const { weather, ...rest } = location; // destructuring to remove weather property
+                return rest;
+            });
+            await AsyncStorage.setItem('locations', JSON.stringify(updatedLocations));
         } catch (error) {
             console.error(error);
         }
@@ -35,7 +39,11 @@ export default function App() {
             try {
                 const savedLocations = await AsyncStorage.getItem('locations');
                 if (savedLocations !== null) {
-                    setLocations(JSON.parse(savedLocations));
+                    const parsedLocations = JSON.parse(savedLocations);
+                    const updatedLocations = parsedLocations.map((location, index) => {
+                        return { ...location, id: index + 1, weather: { main: { temp: "-" }, weather: [{ description: '-' }] } }; // add weather property with empty object value, and generate a new unique id
+                    });
+                    setLocations(updatedLocations);
                 }
             } catch (error) {
                 console.error(error);
